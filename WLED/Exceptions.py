@@ -1,0 +1,2 @@
+class InvaledFX(Exception):
+    pass

@@ -2,6 +2,8 @@ import sys
 import os
 import time
 import requests
+pallets = "pal"
+effects = "fx"
 todo_func = [
 #    "__init__",
 #    "on",
