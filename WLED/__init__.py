@@ -39,7 +39,7 @@ class Wled():
         self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
         self.raw_data = self.raw_raw_data["state"]
         self.data = self.raw_data["seg"][self.seg]
-        return(self.raw_data)
+        return(self.raw_raw_data)
     def on(self):
         self.data["on"] = True
         requests.post(f"http://{self.hostname}/{self.endpoint}/", json={"on": True})
