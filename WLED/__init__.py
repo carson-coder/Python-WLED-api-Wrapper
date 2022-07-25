@@ -1,5 +1,5 @@
 import requests
-import Exceptions
+from . import Exceptions
 
 pallets = "pal"
 effects = "fx"
@@ -71,14 +71,13 @@ class Wled():
     def get_effects(self):
         return(self.raw_raw_data["effects"])
     def __str__(self):
-        return(f"""
-                WLED Strip:
-                    IP: {self.hostname}
-                    Endpoint: {self.endpoint}
-                    Current Segment: {self.seg}:
-                        On: {self.data["on"]}
-                        Brightness: {self.data["bri"]}
-                        Color1: {self.data["col"][0]}
-                        Color2: {self.data["col"][1]}
-                        Color3: {self.data["col"][2]}
+        return(f"""WLED Strip:
+    IP: {self.hostname}
+    Endpoint: {self.endpoint}
+    Current Segment: {self.seg}:
+        On: {self.data["on"]}
+        Brightness: {self.data["bri"]}
+        Color1: {self.data["col"][0]}
+        Color2: {self.data["col"][1]}
+        Color3: {self.data["col"][2]}
                """)
