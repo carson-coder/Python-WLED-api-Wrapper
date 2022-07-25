@@ -20,8 +20,8 @@ todo_func = [
     "use_preset",
 #    "set_secondary_color",
 #    "set_thirdary_color",
-    "get_effects",
-    "get_color_palettes",
+#    "get_effects",
+#    "get_color_palettes",
     "get_effect",
     "get_color_palette"
 ]
@@ -29,12 +29,15 @@ class Wled():
     def __init__(self, hostname: str, endpoint: str = "/json/"):
         self.hostname = hostname.replace("http://", "").replace("https://", "")
         self.endpoint = endpoint.replace("/", "")
-        self.raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()["state"]
+        self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
+        self.raw_data = self.raw_raw_data["state"]
     def update(self):
-        self.raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()["state"]
+        self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
+        self.raw_data = self.raw_raw_data["state"]
         self.data = self.raw_data["seg"][self.seg]
     def get_raw_data(self):
-        self.raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()["state"]
+        self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
+        self.raw_data = self.raw_raw_data["state"]
         self.data = self.raw_data["seg"][self.seg]
         return(self.raw_data)
     def on(self):
@@ -62,3 +65,7 @@ class Wled():
             self.raw_data["seg"][self.seg] = self.data
         self.data = self.raw_data["seg"][seg]
         self.seg = seg
+    def get_color_palettes(self):
+        return(self.raw_raw_data["color_palettes"])
+    def get_effects(self):
+        return(self.raw_raw_data["effects"])
