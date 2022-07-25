@@ -1,0 +1,4 @@
+{
+    "Wled_IP": "http://carson-desk.local",
+    "Api_Endpoint": "/json" # leave blank for default
+}
