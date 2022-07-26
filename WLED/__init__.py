@@ -1,7 +1,7 @@
 import requests
 from . import Exceptions
 
-pallets = "pal"
+paletts = "pal"
 effects = "fx"
 todo_func = [
 #    "__init__",
@@ -23,8 +23,8 @@ todo_func = [
 #    "set_thirdary_color",
 #    "get_effects",
 #    "get_color_palettes",
-    "get_effect",
-    "get_color_palette"
+#    "get_effect",
+#    "get_color_palette"
 ]
 class Wled():
     def __init__(self, hostname: str, endpoint: str = "/json/"):
@@ -70,6 +70,10 @@ class Wled():
         return(self.raw_raw_data["color_palettes"])
     def get_effects(self):
         return(self.raw_raw_data["effects"])
+    def get_effect(self):
+        return(self.raw_raw_data["effects"][self.data[effects]])
+    def get_color_palette(self):
+        return(self.raw_raw_data["color_palettes"][self.data[paletts]])
     def __str__(self):
         return(f"""WLED Strip:
     IP: {self.hostname}
