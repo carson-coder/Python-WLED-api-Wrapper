@@ -74,6 +74,10 @@ class Wled():
         return(self.raw_raw_data["effects"][self.data[effects]])
     def get_color_palette(self):
         return(self.raw_raw_data["color_palettes"][self.data[paletts]])
+    def set_effect(self):
+        requests.post(f"http://{self.hostname}/{self.endpoint}/", json = self.raw_raw_data["effects"].index(self.data[effects]))
+    def set_color_palette(self):
+        requests.post(f"http://{self.hostname}/{self.endpoint}/", json = self.raw_raw_data["color_palettes"].index(self.data[paletts]))
     def __str__(self):
         return(f"""WLED Strip:
     IP: {self.hostname}
