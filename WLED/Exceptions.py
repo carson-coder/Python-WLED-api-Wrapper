@@ -1,6 +1,8 @@
 class InvaledFX(Exception):
     pass
-class InvaledPallet(Exception):
+class InvaledPalette(Exception):
     pass
 class InvaledSegment(Exception):
+    pass
+class InvalidHost(Exception):
     pass
