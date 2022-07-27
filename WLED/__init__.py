@@ -12,8 +12,8 @@ todo_func = [
 #    "toggle",
 #    "set_brightness",
 #    "set_color",
-    "set_effect",
-    "set_color_palette",
+#    "set_effect",
+#    "set_color_palette",
     "create_segment",
     "delete_segment",
     "create_preset",
@@ -89,3 +89,5 @@ class Wled():
         Color2: {self.data["col"][1]}
         Color3: {self.data["col"][2]}
                """)
+    def use_preset(self, preset_id: int):
+        requests.post(f"http://{self.hostname}/{self.endpoint}/", json={"state": {"ps": preset_id}})
