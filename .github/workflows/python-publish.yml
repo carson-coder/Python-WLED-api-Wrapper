@@ -30,7 +30,7 @@ jobs:
         --sdist
         --wheel
         --outdir dist/
-        .
+        WLED
     - name: Publish distribution 📦 to Test PyPI
       if: github.ref == 'refs/heads/stable'
       uses: pypa/gh-action-pypi-publish@release/v1
