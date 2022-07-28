@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
 name = "WLED_light_controller"
-version = "0.3.0"
+version = "0.3.1"
 authors = [
   { name="Carson Coder", email="carsondpool@gmail.com" },
 ]
@@ -15,6 +15,10 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+]
+dependencies = [
+    "requests",
+    "pkg_resources"
 ]
 
 [project.urls]
