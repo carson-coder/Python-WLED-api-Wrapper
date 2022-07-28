@@ -28,7 +28,7 @@ todo_func = [
 #    "get_color_palette"
 ]
 class Wled():
-    version = f"{pkg_resources.get_distribution('my-package-name').version}: stable"
+    version = f"{pkg_resources.get_distribution('my-package-name').version}"
     def __init__(self, hostname: str, endpoint: str = "/json/", error=True):
         self.hostname = hostname.replace("http://", "").replace("https://", "")
         self.endpoint = endpoint.replace("/", "")
