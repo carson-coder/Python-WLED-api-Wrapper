@@ -1,6 +1,6 @@
 import requests
 from . import Exceptions
-import pkg_resources
+import json
 
 paletts = "pal"
 effects = "fx"
@@ -28,7 +28,8 @@ todo_func = [
 #    "get_color_palette"
 ]
 class Wled():
-    version = f"{pkg_resources.get_distribution('my-package-name').version}"
+    data = json.load(open('./wled/config.json'))
+    version = f"{data['version']}: {(int(data['stable']) * 'stable') + (int(not(data['stable'])) * 'beta')}"
     def __init__(self, hostname: str, endpoint: str = "/json/", error=True):
         self.hostname = hostname.replace("http://", "").replace("https://", "")
         self.endpoint = endpoint.replace("/", "")
