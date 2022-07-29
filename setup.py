@@ -2,7 +2,7 @@ from distutils.core import setup
 import json
 data = json.load(open('./wled/config.json'))
 setup(name='WLED_light_controller',
-      version=f"{data['version']}: {(int(data['stable']) * 'stable') + (int(not(data['stable'])) * 'beta')}",
+      version=f"{data['version']}",
       description='A small WLED light controller in Python',
       author="Carson Coder",
       author_email="carsondpool@gmail.com",
