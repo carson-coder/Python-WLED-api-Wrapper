@@ -7,5 +7,5 @@ setup(name='WLED_light_controller',
       author="Carson Coder",
       author_email="carsondpool@gmail.com",
       url='https://github.com/carson-coder/Python-WLED-api-Wrapper',
-      packages=['requests', 'json'],
+      py_modules=['requests', 'json'],
      )
