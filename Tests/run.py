@@ -1,4 +1,4 @@
-from WLED import Wled
+from wled import Wled
 import time
 import json
 

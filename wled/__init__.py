@@ -1,5 +1,6 @@
 import requests
 from . import Exceptions
+import json
 
 paletts = "pal"
 effects = "fx"
@@ -27,10 +28,18 @@ todo_func = [
 #    "get_color_palette"
 ]
 class Wled():
-    def __init__(self, hostname: str, endpoint: str = "/json/"):
+    data = json.load(open('./wled/config.json'))
+    version = f"{data['version']}: {(int(data['stable']) * 'stable') + (int(not(data['stable'])) * 'beta')}"
+    def __init__(self, hostname: str, endpoint: str = "/json/", error=True):
         self.hostname = hostname.replace("http://", "").replace("https://", "")
         self.endpoint = endpoint.replace("/", "")
-        self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
+        self.error = error
+        try:
+            self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
+        except Exception as e:
+            if error:
+                raise Exceptions.InvalidHost(f"http://{self.hostname}/{self.endpoint}/ is not a valid host")
+            return Exceptions.InvalidHost(f"http://{self.hostname}/{self.endpoint}/ is not a valid host")
         self.raw_data = self.raw_raw_data["state"]
     def update(self):
         self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
@@ -64,8 +73,16 @@ class Wled():
     def set_seg(self, seg: int):
         if hasattr(self, "seg") and hasattr(self, "data"):
             self.raw_data["seg"][self.seg] = self.data
-        self.data = self.raw_data["seg"][seg]
-        self.seg = seg
+            
+        if seg in range(0, len(self.raw_data["seg"])):
+            self.seg = seg
+            self.data = self.raw_data["seg"][self.seg]
+            return
+            
+        if self.error:
+            raise Exceptions.InvaledSegment(f"{seg} is not a valid segment")
+        else:
+            return Exceptions.InvaledSegment(f"{seg} is not a valid segment")
     def get_color_palettes(self):
         return(self.raw_raw_data["color_palettes"])
     def get_effects(self):
@@ -75,9 +92,21 @@ class Wled():
     def get_color_palette(self):
         return(self.raw_raw_data["color_palettes"][self.data[paletts]])
     def set_effect(self):
-        requests.post(f"http://{self.hostname}/{self.endpoint}/", json = self.raw_raw_data["effects"].index(self.data[effects]))
+        try:
+            requests.post(f"http://{self.hostname}/{self.endpoint}/", json = self.raw_raw_data["effects"].index(self.data[effects]))
+        except ValueError:
+            if self.error:
+                raise Exceptions.InvalidFX(f"{self.data[effects]} is not a valid effect")
+            else:
+                return Exceptions.InvalidFX(f"{self.data[effects]} is not a valid effect")
     def set_color_palette(self):
-        requests.post(f"http://{self.hostname}/{self.endpoint}/", json = self.raw_raw_data["color_palettes"].index(self.data[paletts]))
+        try:
+            requests.post(f"http://{self.hostname}/{self.endpoint}/", json = self.raw_raw_data["color_palettes"].index(self.data[paletts]))
+        except ValueError:
+            if self.error:
+                raise Exceptions.InvalidPalette(f"{self.data[paletts]} is not a valid palette")
+            else:
+                return Exceptions.InvalidPalette(f"{self.data[paletts]} is not a valid palette")
     def __str__(self):
         return(f"""WLED Strip:
     IP: {self.hostname}
