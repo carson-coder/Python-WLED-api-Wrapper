@@ -9,5 +9,5 @@ setup(name='WLED_light_controller',
       url='https://github.com/carson-coder/Python-WLED-api-Wrapper',
       license="LICENSE",
       long_description=open('README.md').read(),
-      py_modules=['requests', 'json'],
+      packages=['wled']
      )
