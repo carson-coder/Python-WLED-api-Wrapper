@@ -1,8 +1,10 @@
-class InvaledFX(Exception):
+class InvalidFX(Exception):
     pass
-class InvaledPalette(Exception):
+class InvalidPalette(Exception):
     pass
-class InvaledSegment(Exception):
+class InvalidSegment(Exception):
     pass
 class InvalidHost(Exception):
+    pass
+class InvalidRange(Exception):
     pass

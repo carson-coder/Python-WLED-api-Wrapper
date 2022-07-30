@@ -1,5 +1,17 @@
-import requests
-from . import Exceptions
+import requests as rq
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+
+requests = rq.Session()
+retry = Retry(connect=3, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+requests.mount('http://', adapter)
+requests.mount('https://', adapter)
+if __name__ == "__main__":
+    import Exceptions
+else:
+    from . import Exceptions
 import json
 
 paletts = "pal"
@@ -15,8 +27,8 @@ todo_func = [
 #    "set_color",
 #    "set_effect",
 #    "set_color_palette",
-    "create_segment",
-    "delete_segment",
+#    "create_segment",
+#    "delete_segment",
     "create_preset",
     "delete_preset",
     "use_preset",
@@ -44,11 +56,13 @@ class Wled():
     def update(self):
         self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
         self.raw_data = self.raw_raw_data["state"]
-        self.data = self.raw_data["seg"][self.seg]
+        if hasattr(self, "seg") and hasattr(self, "data"):
+            self.data = self.raw_data["seg"][self.seg]
     def get_raw_data(self):
         self.raw_raw_data = requests.get(f"http://{self.hostname}/{self.endpoint}/").json()
         self.raw_data = self.raw_raw_data["state"]
-        self.data = self.raw_data["seg"][self.seg]
+        if hasattr(self, "seg") and hasattr(self, "data"):
+            self.data = self.raw_data["seg"][self.seg]
         return(self.raw_raw_data)
     def on(self):
         self.data["on"] = True
@@ -80,7 +94,7 @@ class Wled():
             return
             
         if self.error:
-            raise Exceptions.InvaledSegment(f"{seg} is not a valid segment")
+            raise Exceptions.InvalidSegment(f"{seg} is not a valid segment")
         else:
             return Exceptions.InvaledSegment(f"{seg} is not a valid segment")
     def get_color_palettes(self):
@@ -91,17 +105,19 @@ class Wled():
         return(self.raw_raw_data["effects"][self.data[effects]])
     def get_color_palette(self):
         return(self.raw_raw_data["color_palettes"][self.data[paletts]])
-    def set_effect(self):
+    def set_effect(self, fx: str):
         try:
-            requests.post(f"http://{self.hostname}/{self.endpoint}/", json = self.raw_raw_data["effects"].index(self.data[effects]))
+            self.data["fx"] = self.raw_raw_data["effects"].index(fx)
+            requests.post(f"http://{self.hostname}/{self.endpoint}/", json = {"seg": ([{}]*self.seg)+[{"fx": self.raw_raw_data["effects"].index(fx) }]})
         except ValueError:
             if self.error:
                 raise Exceptions.InvalidFX(f"{self.data[effects]} is not a valid effect")
             else:
                 return Exceptions.InvalidFX(f"{self.data[effects]} is not a valid effect")
-    def set_color_palette(self):
+    def set_color_palette(self, pal: str):
         try:
-            requests.post(f"http://{self.hostname}/{self.endpoint}/", json = self.raw_raw_data["color_palettes"].index(self.data[paletts]))
+            self.data["pal"] = self.raw_raw_data["effects"].index(pal)
+            requests.post(f"http://{self.hostname}/{self.endpoint}/", json = {"seg": ([{}]*self.seg)+[{"pal": self.raw_raw_data["effects"].index(pal) }]})
         except ValueError:
             if self.error:
                 raise Exceptions.InvalidPalette(f"{self.data[paletts]} is not a valid palette")
@@ -119,4 +135,39 @@ class Wled():
         Color3: {self.data["col"][2]}
                """)
     def use_preset(self, preset_id: int):
-        requests.post(f"http://{self.hostname}/{self.endpoint}/", json={"state": {"ps": preset_id}})
+        requests.post(f"http://{self.hostname}/{self.endpoint}/", json={"ps": preset_id})
+    def create_segment(self, brightness: int, color1: tuple, color2: tuple, color3: tuple, start: int | None, end: int | None, range: list | None):
+        if (start != None) and (end != None) and range == None:
+            pass
+        elif start and end and range:
+            if self.error:
+                raise Exceptions.InvalidRange(f"Cant have start, end and range at the same time")
+            else:
+                print("Cant have start, end and range at the same time")
+        elif range:
+            start = range[0]
+            end = range[1]
+        else:
+            if self.error:
+                raise Exceptions.InvalidRange(f"Need start and end or range")
+            else:
+                print("Need start and end or range")
+                return(Exceptions.InvalidRange(f"Need start and end or range"))
+        if len(self.raw_data["seg"]) == 0:
+            self.raw_data["seg"] = [{"id": -1}]
+        requests.post(f"http://{self.hostname}/{self.endpoint}/", json={"seg": ([{}]*len(self.raw_data["seg"]))+[{"id": self.raw_data['seg'][max(len(self.raw_data["seg"])-1, 0)]['id']+1, "on": True, "start": start, "stop": end, "bri": brightness, "col": [color1, color2, color3]}]})
+        self.update()
+    def delete_segment(self, id: int):
+        for i in self.raw_data["seg"]+["err"]:
+            if i == 'err':
+                if self.error:
+                    raise Exceptions.InvalidSegment(f"{id} is not a valid segment")
+                else:
+                    print("{id} is not a valid segment")
+                    return(Exceptions.InvalidSegment(f"{id} is not a valid segment"))
+            if i["id"] == id:
+                b = self.raw_data["seg"].index(i)
+                break
+                
+        requests.post(f"http://{self.hostname}/{self.endpoint}/", json={"seg": ([{}]*b)+[{"on": True, "start": 1, "stop": 0}]})
+        self.update()
