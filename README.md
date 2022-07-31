@@ -1,11 +1,17 @@
 # Python-WLED-api-Wrapper
 A project i am working on that is a Wrapper of the wled api.    
 [Discord](https://discord.gg/Df3v3ryWjg)  
-  
+
+How to install:  
+pip install -i https://test.pypi.org/simple/ WLED-light-controller for beta
+pip install WLED-light-controller for stable
+
 stable versions are 0.x.0  
 beta versions are 0.x.x  
 
 Patch notes:  
 -- added Error and error arg in __init__ that if false with return a error instead of raising a error
 
-The readme is unfinished i need people to help me with the github page
+The readme is unfinished i need people to help me with the github page  
+
+on on off on update
