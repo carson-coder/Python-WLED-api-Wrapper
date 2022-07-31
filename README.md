@@ -4,13 +4,10 @@ A project i am working on that is a Wrapper of the wled api.
 
 How to install:  
 pip install -i https://test.pypi.org/simple/ WLED-light-controller for beta
-pip install WLED-light-controller for stable
-
-stable versions are 0.x.0  
-beta versions are 0.x.x  
+pip install WLED-light-controller for stable 
 
 Patch notes:  
--- added Error and error arg in __init__ that if false with return a error instead of raising a error
+-- added secret code
 
 The readme is unfinished i need people to help me with the github page  
 
