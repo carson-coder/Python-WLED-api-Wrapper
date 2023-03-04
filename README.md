@@ -3,8 +3,8 @@ A project i am working on that is a Wrapper of the wled api.
 [Discord](https://discord.gg/Df3v3ryWjg)  
 
 How to install:  
-pip install -i https://test.pypi.org/simple/ WLED-light-controller for beta
-pip install WLED-light-controller for stable 
+`pip install -i https://test.pypi.org/simple/ WLED-light-controller` for beta.
+`pip install WLED-light-controller` for stable.
 
 Patch notes:  
 -- added secret code
