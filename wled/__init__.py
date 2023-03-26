@@ -42,8 +42,8 @@ todo_func = [
 ]
 class Wled():  
     info = {
-    "version": "0.3.8",
-    "stable": true
+    "version": "0.3.9",
+    "stable": True
 }
     version = f"{info['version']}: {(int(info['stable']) * 'stable') + (int(not(info['stable'])) * 'beta')}"
     def __init__(self, hostname: str, endpoint: str = "/json/", error=True):
