@@ -41,7 +41,10 @@ todo_func = [
 #    "get_color_palette"
 ]
 class Wled():  
-    info = json.load(open('./wled/config.json'))
+    info = {
+    "version": "0.3.8",
+    "stable": true
+}
     version = f"{info['version']}: {(int(info['stable']) * 'stable') + (int(not(info['stable'])) * 'beta')}"
     def __init__(self, hostname: str, endpoint: str = "/json/", error=True):
         self.codes = []
